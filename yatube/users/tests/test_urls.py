@@ -56,7 +56,8 @@ class UsersURLTests(TestCase):
             '/auth/password_change/done/': 'users/password_change_done.html',
             '/auth/password_reset/': 'users/password_reset_form.html',
             '/auth/password_reset/done/': 'users/password_reset_done.html',
-            '/auth/reset/<uidb64>/<token>/': 'users/password_reset_confirm.html',
+            '/auth/reset/<uidb64>/<token>/':
+                'users/password_reset_confirm.html',
             '/auth/reset/done/': 'users/password_reset_complete.html',
         }
         for adress, template in field_url.items():

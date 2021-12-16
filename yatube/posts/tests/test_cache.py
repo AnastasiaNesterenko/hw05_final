@@ -45,4 +45,3 @@ class CacheIndexTest(TestCase):
         response = self.authorized_client.get(reverse('posts:index'))
         len_resp_3 = len(response.content)
         self.assertNotEqual(len_resp, len_resp_3)
-
