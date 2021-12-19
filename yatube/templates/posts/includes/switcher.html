@@ -4,7 +4,7 @@
       <li class="nav-item">
         <a 
           class="nav-link
-          {% if view_name  == 'posts:index' %}
+          {% if 'posts:index' %}
             active
           {% endif %}"
           href="{% url 'posts:index' %}"
@@ -15,7 +15,7 @@
       <li class="nav-item">
         <a 
            class="nav-link
-           {% if view_name  == 'posts:follow_index' %}
+           {% if 'posts:follow_index' %}
              active
            {% endif %}"
            href="{% url 'posts:follow_index' %}"
