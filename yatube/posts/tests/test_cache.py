@@ -4,9 +4,7 @@ from django.core.cache.utils import make_template_fragment_key
 from django.test import Client, TestCase
 from django.urls import reverse
 
-
 from posts.models import Post, Group
-
 
 User = get_user_model()
 

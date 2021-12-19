@@ -32,7 +32,7 @@ urlpatterns = [
         name='post_edit'
     ),
     path(
-        'posts/<int:post_id>/comment',
+        'posts/<int:post_id>/comment/',
         views.add_comment,
         name='add_comment'),
     path('follow/', views.follow_index, name='follow_index'),

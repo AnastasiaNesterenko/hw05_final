@@ -1,18 +1,15 @@
 from django.contrib.auth.decorators import login_required
-from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, render, redirect
 from django.views.decorators.csrf import csrf_exempt
 
 from .forms import PostForm, CommentForm
 from .models import Post, Group, User, Comment, Follow
-from yatube.settings import NUMBER_OF_RECORDS
+from .utils import paginator
 
 
 def index(request):
-    post_list = Post.objects.all().order_by('-pub_date')
-    paginator = Paginator(post_list, NUMBER_OF_RECORDS)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+    post_list = Post.objects.select_related('group').all().order_by('-pub_date')
+    page_obj = paginator(request, post_list)
     context = {
         'page_obj': page_obj,
     }
@@ -22,9 +19,7 @@ def index(request):
 def group(request, slug):
     group = get_object_or_404(Group, slug=slug)
     post_list = Post.objects.filter(group=group).order_by('-pub_date')
-    paginator = Paginator(post_list, NUMBER_OF_RECORDS)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+    page_obj = paginator(request, post_list)
     context = {
         'group': group,
         'page_obj': page_obj,
@@ -35,12 +30,10 @@ def group(request, slug):
 def profile(request, username):
     author = get_object_or_404(User, username=username)
     post_list = Post.objects.filter(author=author).order_by('-pub_date')
-    paginator = Paginator(post_list, NUMBER_OF_RECORDS)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+    page_obj = paginator(request, post_list)
     following = (
         request.user.is_authenticated
-        and Follow.objects.filter(user=request.user).exists()
+        and Follow.objects.filter(user=request.user, author=author).exists()
     )
     context = {
         'author': author,
@@ -124,9 +117,7 @@ def follow_index(request):
     post_list = Post.objects.filter(
         author__following__user=request.user
     ).order_by('-pub_date')
-    paginator = Paginator(post_list, NUMBER_OF_RECORDS)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+    page_obj = paginator(request, post_list)
     context = {
         'page_obj': page_obj,
     }
@@ -135,15 +126,11 @@ def follow_index(request):
 
 @login_required
 def profile_follow(request, username):
-    if request.user.username == username:
+    author = get_object_or_404(User, username=username)
+    if request.user == author:
         return redirect('posts:profile', username=username)
     following = get_object_or_404(User, username=username)
-    already_follows = Follow.objects.filter(
-        user=request.user,
-        author=following
-    ).exists()
-    if not already_follows:
-        Follow.objects.create(user=request.user, author=following)
+    Follow.objects.get_or_create(user=request.user, author=following)
     return redirect('posts:profile', username=username)
 
 

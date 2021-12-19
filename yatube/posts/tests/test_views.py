@@ -22,6 +22,7 @@ class PostViewsTest(TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.user_2 = User.objects.create_user(username='Poklonik')
         cls.user = User.objects.create_user(username='HasNoName')
         cls.group = Group.objects.create(
             title='Тестовая группа',
@@ -52,6 +53,9 @@ class PostViewsTest(TestCase):
             post=cls.post,
             author=cls.user,
         )
+        cls.follow = Follow.objects.create(
+            user=cls.user_2,
+            author=cls.user)
 
     @classmethod
     def tearDownClass(cls):
@@ -61,6 +65,11 @@ class PostViewsTest(TestCase):
     def setUp(self):
         self.authorized_client = Client()
         self.authorized_client.force_login(self.user)
+        self.authorized_client_2 = Client()
+        self.authorized_client_2.force_login(self.user_2)
+        self.user_3 = User.objects.create_user(username='NePoklonik')
+        self.authorized_client_3 = Client()
+        self.authorized_client_3.force_login(self.user_3)
 
     def test_pages_uses_correct_template(self):
         """URL-адрес использует соответствующий шаблон."""
@@ -219,9 +228,13 @@ class PostViewsTest(TestCase):
             data=form_data,
             follow=True
         )
+        new_comment_id = Comment.objects.filter(
+            text=comment
+        ).order_by('-id').values('id')[:1]
         self.assertFalse(
             Comment.objects.filter(
                 text=comment,
+                id=new_comment_id
             ).exists()
         )
 
@@ -237,6 +250,67 @@ class PostViewsTest(TestCase):
         post_comment_author_0 = first_object.author
         self.assertEqual(post_comment_0, self.comment.text)
         self.assertEqual(post_comment_author_0, self.user)
+
+    def test_follow(self):
+        form_data = {
+            'author': self.user,
+            'user': self.user_3
+        }
+        response_3 = self.authorized_client_3.get(
+            reverse(
+                'posts:profile_follow',
+                kwargs={'username': self.user}
+            ),
+            data=form_data,
+            follow=True
+        )
+        self.assertRedirects(
+            response_3, reverse(
+                'posts:profile', kwargs={'username': self.user}
+            )
+        )
+        self.assertTrue(
+            Follow.objects.filter(
+                user=self.user_3,
+                author=self.user
+            ).exists()
+        )
+
+    def test_unfollow(self):
+        form_data = {
+            'author': self.user,
+            'user': self.user_2
+        }
+        response_2 = self.authorized_client_2.get(
+            reverse(
+                'posts:profile_unfollow',
+                kwargs={'username': self.user}
+            ),
+
+        )
+        self.assertRedirects(
+            response_2, reverse(
+                'posts:profile', kwargs={'username': self.user}
+            )
+        )
+        self.assertFalse(
+            Follow.objects.filter(
+                user=self.user_2,
+                author=self.user
+            ).exists()
+        )
+
+    def test_recording_follow(self):
+        response_2 = self.authorized_client_2.get(
+            reverse('posts:follow_index')
+        )
+        response_3 = self.authorized_client_3.get(
+            reverse('posts:follow_index')
+        )
+        post_2 = response_2.context['page_obj']
+        post_3 = response_3.context['page_obj']
+        self.assertTrue(post_2)
+        self.assertFalse(post_3)
 
 
 class PaginatorViewsTest(TestCase):
@@ -316,41 +390,3 @@ class PaginatorViewsTest(TestCase):
             ),
             leftover_pages
         )
-
-    def test_follow_unfollow(self):
-        self.user_2 = User.objects.create_user(username='Poklonik')
-        self.authorized_client_2 = Client()
-        self.authorized_client_2.force_login(self.user_2)
-        Follow.objects.create(user=self.user_2, author=self.user)
-        self.assertTrue(
-            Follow.objects.filter(
-                user=self.user_2,
-                author=self.user
-            ).exists()
-        )
-        Follow.objects.filter(user=self.user_2, author=self.user).delete()
-        self.assertFalse(
-            Follow.objects.filter(
-                user=self.user_2,
-                author=self.user
-            ).exists()
-        )
-
-    def test_recording_follow(self):
-        self.user_2 = User.objects.create_user(username='Poklonik')
-        self.authorized_client_2 = Client()
-        self.authorized_client_2.force_login(self.user_2)
-        Follow.objects.create(user=self.user_2, author=self.user)
-        self.user_3 = User.objects.create_user(username='NePoklonik')
-        self.authorized_client_3 = Client()
-        self.authorized_client_3.force_login(self.user_3)
-        response_2 = self.authorized_client_2.get(
-            reverse('posts:follow_index')
-        )
-        response_3 = self.authorized_client_3.get(
-            reverse('posts:follow_index')
-        )
-        post_2 = response_2.context['page_obj']
-        post_3 = response_3.context['page_obj']
-        self.assertTrue(post_2)
-        self.assertFalse(post_3)

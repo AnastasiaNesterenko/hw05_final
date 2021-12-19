@@ -89,7 +89,7 @@ class PostCreateFormTests(TestCase):
             Post.objects.order_by('-id').filter(
                 text=new_text,
                 id=new_post_id,
-                image='posts/new_small.gif'
+                image=f'posts/{new_uploaded.name}'
             ).exists()
         )
 
@@ -129,7 +129,7 @@ class PostCreateFormTests(TestCase):
             Post.objects.order_by('-id').filter(
                 text=text_repl,
                 id=self.post.id,
-                image='posts/small_repl.gif'
+                image=f'posts/{uploaded_repl.name}'
             ).exists()
         )
 
@@ -174,7 +174,7 @@ class PostCreateFormTests(TestCase):
                 text=new_text,
                 group=self.post.group.id,
                 id=new_post_id,
-                image='posts/new_small_2.gif'
+                image=f'posts/{new_uploaded.name}'
             ).exists()
         )
 
@@ -216,7 +216,7 @@ class PostCreateFormTests(TestCase):
                 text=text_repl,
                 group=self.post.group.id,
                 id=self.post.id,
-                image='posts/small_repl_2.gif'
+                image=f'posts/{uploaded_repl.name}'
             ).exists()
         )
 
@@ -261,7 +261,7 @@ class PostCreateFormTests(TestCase):
                 text=new_text,
                 group=self.post.group.id,
                 id=new_post_id,
-                image='posts/new_small_3.gif'
+                image=f'posts/{new_uploaded.name}'
             ).exists()
         )
 
@@ -304,6 +304,6 @@ class PostCreateFormTests(TestCase):
                 text=text_repl,
                 group=self.post.group.id,
                 id=self.post.id,
-                image='posts/small_repl_3.gif'
+                image=f'posts/{uploaded_repl.name}'
             ).exists()
         )
