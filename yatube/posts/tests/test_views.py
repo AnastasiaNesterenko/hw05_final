@@ -286,7 +286,8 @@ class PostViewsTest(TestCase):
                 'posts:profile_unfollow',
                 kwargs={'username': self.user}
             ),
-
+            data=form_data,
+            follow=True
         )
         self.assertRedirects(
             response_2, reverse(

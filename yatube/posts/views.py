@@ -8,7 +8,9 @@ from .utils import paginator
 
 
 def index(request):
-    post_list = Post.objects.select_related('group').all().order_by('-pub_date')
+    post_list = Post.objects.select_related(
+        'group'
+    ).all().order_by('-pub_date')
     page_obj = paginator(request, post_list)
     context = {
         'page_obj': page_obj,
