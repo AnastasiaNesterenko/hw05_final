@@ -12,8 +12,10 @@ def index(request):
         'group'
     ).all().order_by('-pub_date')
     page_obj = paginator(request, post_list)
+    index = True
     context = {
         'page_obj': page_obj,
+        'index': index
     }
     return render(request, 'posts/index.html', context)
 
@@ -120,8 +122,10 @@ def follow_index(request):
         author__following__user=request.user
     ).order_by('-pub_date')
     page_obj = paginator(request, post_list)
+    follow = True
     context = {
         'page_obj': page_obj,
+        'follow': follow
     }
     return render(request, 'posts/follow.html', context)
 
