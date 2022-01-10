@@ -10,12 +10,16 @@ from .utils import paginator
 def index(request):
     post_list = Post.objects.select_related(
         'group'
+    ).select_related(
+        'author'
     ).all().order_by('-pub_date')
     page_obj = paginator(request, post_list)
+    page_number = request.GET.get('page')
     index = True
     context = {
         'page_obj': page_obj,
-        'index': index
+        'index': index,
+        'page_number': page_number
     }
     return render(request, 'posts/index.html', context)
 

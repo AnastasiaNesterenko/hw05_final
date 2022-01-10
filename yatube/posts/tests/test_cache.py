@@ -6,6 +6,8 @@ from django.urls import reverse
 
 from posts.models import Post, Group
 
+from yatube.settings import NUMBER_OF_RECORDS
+
 User = get_user_model()
 
 
@@ -30,6 +32,7 @@ class CacheIndexTest(TestCase):
         self.authorized_client.force_login(self.user)
 
     def test_cache(self):
+        [page_number] = Post.objects.count() % NUMBER_OF_RECORDS
         response = self.authorized_client.get(reverse('posts:index'))
         self.assertTrue(response.content)
         len_resp = len(response.content)
@@ -38,7 +41,7 @@ class CacheIndexTest(TestCase):
         self.assertTrue(response.content)
         len_resp_2 = len(response.content)
         self.assertEqual(len_resp, len_resp_2)
-        key = make_template_fragment_key('index_page')
+        key = make_template_fragment_key('index_page', [page_number])
         cache.delete(key)
         response = self.authorized_client.get(reverse('posts:index'))
         len_resp_3 = len(response.content)
