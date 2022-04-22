@@ -6,5 +6,5 @@ from django.apps import AppConfig
 
 
 class UsersConfig(AppConfig):
-    """Регистрация приложения posts."""
+    """Регистрация приложения users."""
     name = 'users'
