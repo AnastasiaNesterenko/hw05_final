@@ -1,3 +1,7 @@
+"""
+Тесты, написанные с помощью модуля unittest.
+Проверяет корректную работу views.py.
+"""
 import shutil
 import tempfile
 

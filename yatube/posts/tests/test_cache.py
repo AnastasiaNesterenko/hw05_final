@@ -1,3 +1,7 @@
+"""
+Тесты, написанные с помощью модуля unittest.
+Проверяет корректную работу функцию кеширования.
+"""
 from django.contrib.auth import get_user_model
 from django.core.cache import cache
 from django.core.cache.utils import make_template_fragment_key

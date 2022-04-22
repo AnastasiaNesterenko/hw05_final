@@ -1,3 +1,8 @@
+"""
+Приложение posts отвечает за работу сайта.
+В models.py описаны данных, которые хранятся в БД.
+Модель для группы, поста, коментария и подписки.
+"""
 from django.contrib.auth import get_user_model
 from django.db import models
 
@@ -5,6 +10,7 @@ User = get_user_model()
 
 
 class Group(models.Model):
+    """Модель для группы."""
     title = models.CharField(max_length=200)
     slug = models.SlugField(max_length=200, unique=True)
     description = models.TextField()
@@ -14,6 +20,7 @@ class Group(models.Model):
 
 
 class Post(models.Model):
+    """Модель для поста."""
     text = models.TextField(
         verbose_name='Текст поста',
         help_text='Введите текст поста'
@@ -50,6 +57,7 @@ class Post(models.Model):
 
 
 class Comment(models.Model):
+    """Модель для коммента."""
     text = models.TextField(
         verbose_name='Текст комментария',
         help_text='Введите текст комментария'
@@ -75,6 +83,7 @@ class Comment(models.Model):
 
 
 class Follow(models.Model):
+    """Модель для подписки."""
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -94,3 +103,4 @@ class Follow(models.Model):
                 fields=['user', 'author'], name='unique_subscription'
             )
         ]
+

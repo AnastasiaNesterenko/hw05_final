@@ -1,3 +1,7 @@
+"""
+Приложение posts отвечает за работу сайта.
+Реализация работы админки.
+"""
 from django.contrib import admin
 
 from .models import Post, Group, Comment, Follow

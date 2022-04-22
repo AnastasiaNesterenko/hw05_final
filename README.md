@@ -1,3 +1,42 @@
-# hw05_final
+# Проект Yatube
 
-[![CI](https://github.com/yandex-praktikum/hw05_final/actions/workflows/python-app.yml/badge.svg?branch=master)](https://github.com/yandex-praktikum/hw05_final/actions/workflows/python-app.yml)
+## Учебный проект напоминающий Яндекс.Дзен.
+
+### Описание
+
+Проект написан на Django. Страницы для браузера написаны на HTML5
+В данном проекте можно публиковать записи (с картинками), 
+оставлять комментарии, подписываться на понравившихся пользователей. 
+Для неавторизированных пользователей доступен только просмотр.
+
+Проект написан на Python 3.9.4, Django 2.2.16.
+
+### Как запустить проект
+
+Клонировать репозиторий и открыть у себя в среде разработки:
+
+```
+git@github.com:AnastasiaNesterenko/hw05_final.git
+```
+
+Cоздать и активировать виртуальное окружение:
+```
+python -m venv env
+source env/bin/activate
+```
+
+Установить зависимости из файла requirements.txt:
+```
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+Выполнить миграции:
+```
+python manage.py migrate
+```
+
+Запустить проект:
+```
+python manage.py runserver
+```

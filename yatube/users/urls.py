@@ -1,3 +1,9 @@
+"""
+Приложение users отвечает за работу с пользователем:
+регистрация, авторизация, восстановление пароля.
+В urls.py прописаны url-адреса страниц, реализованных во views.py
+и стандартных функций.
+"""
 from django.contrib.auth.views import LogoutView, LoginView, \
     PasswordChangeView, PasswordChangeDoneView, \
     PasswordResetView, PasswordResetDoneView, \

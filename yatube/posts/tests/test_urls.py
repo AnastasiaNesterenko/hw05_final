@@ -1,3 +1,7 @@
+"""
+Тесты, написанные с помощью модуля unittest.
+Проверяет корректную работу urls.py.
+"""
 from http import HTTPStatus
 
 from django.contrib.auth import get_user_model

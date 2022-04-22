@@ -1,3 +1,9 @@
+"""
+Приложение users отвечает за работу с пользователем:
+регистрация, авторизация, восстановление пароля.
+В forms.py описана форма для заполнения
+для регистрации.
+"""
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import get_user_model
 

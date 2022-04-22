@@ -1,3 +1,7 @@
+"""
+Приложение posts отвечает за работу сайта.
+В urls.py прописаны url-адреса страниц, реализованных во views.py.
+"""
 from django.urls import path
 
 from . import views

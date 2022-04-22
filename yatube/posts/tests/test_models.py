@@ -1,3 +1,7 @@
+"""
+Тесты, написанные с помощью модуля unittest.
+Проверяет корректную работу models.py.
+"""
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 
